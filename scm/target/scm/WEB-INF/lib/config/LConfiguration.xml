@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<typeAliases>
+      <typeAlias  alias="AttendInfo"      type="com.lanson.oa.pojo.AttendInfo"  />
+    <typeAlias  alias="AttendTime"   type="com.lanson.oa.pojo.AttendTime"  />
+       <typeAlias alias="orderWork"   type="com.lanson.oa.pojo.SupOrderWork"  />
+       <typeAlias alias="SupUser"   type="com.lanson.oa.pojo.SupUser"/>
+       <typeAlias  alias="Auth"        type="com.lanson.oa.pojo.Auth"/>
+       <typeAlias  alias="PerGroup"       type="com.lanson.oa.pojo.PerGroup"/>
+          <typeAlias  alias="QCRemark"       type="com.lanson.oa.pojo.QCRemark"/>
+    </typeAliases>
+</configuration>

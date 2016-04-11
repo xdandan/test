@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lanson.oa.dao.OrderStatusDAO">
+<insert id="saveOrUpdateDate">
+       <selectKey keyProperty="count" resultType="int" order="BEFORE">
+			    select count(*) from  order_status  where orderId = #{orderId}
+			  </selectKey>
+			   <if test="count > 0">
+		update order_status set lock_date=#{lockDate}  where orderId=#{orderId}	   
+			  </if>
+	  <if test="count ==0">
+          insert into order_status(orderId,lock_date)  values(#{orderId},#{lockDate})
+      </if>
+</insert>
+
+<insert id="saveOrUpdateLock">
+       <selectKey keyProperty="count" resultType="int" order="BEFORE">
+			    select count(*) from  order_status  where orderId = #{orderId}
+			  </selectKey>
+			   <if test="count > 0">
+		update order_status set lock_order=#{sqlStatus}  where orderId=#{orderId}	   
+			  </if>
+	  <if test="count ==0">
+          insert into order_status(orderId,lock_order)  values(#{orderId},#{sqlStatus})
+      </if>
+</insert>
+
+<insert id="saveOrUpdateLevel">
+       <selectKey keyProperty="count" resultType="int" order="BEFORE">
+			    select count(*) from  order_status  where orderId = #{orderId}
+			  </selectKey>
+			   <if test="count > 0">
+		update order_status set order_level=#{colorLevel}  where orderId=#{orderId}	   
+			  </if>
+	  <if test="count ==0">
+          insert into order_status(orderId,order_level)  values(#{orderId},#{colorLevel})
+      </if>
+</insert>
+
+
+
+
+</mapper>

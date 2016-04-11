@@ -1,0 +1,45 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+<!-- action -->
+	<bean id="uploadAction" class="com.lanson.oa.action.UploadAction"></bean>
+	 <bean id="indexAction" class="com.lanson.oa.action.IndexAction"></bean>
+     <bean id="loginAction" class="com.lanson.oa.action.LoginAction"></bean>
+   <bean id="orderAction" class="com.lanson.oa.action.order.OrderAction"></bean>
+  <bean  id="userAction" class="com.lanson.oa.action.user.UserAction"></bean>
+  <bean id="qcOrderAction" class="com.lanson.oa.action.order.QcOrderAction"></bean>
+  <bean id="commentAction" class="com.lanson.oa.action.order.CommentAction" ></bean>
+  <bean id="orderChartAction" class="com.lanson.oa.action.chart.OrderChartAction"></bean>
+  <bean id="orderDeliveryAction" class="com.lanson.oa.action.chart.OrderDeliveryAction"></bean>
+  <bean id="orderManageAction" class="com.lanson.oa.action.order.OrderManageAction"></bean>
+  <bean id="outputAction"  class="com.lanson.oa.action.order.report.OutputAction"></bean>
+    <bean id="ourListAction" class="com.lanson.oa.action.out.OutListAction"></bean>
+    <bean id="orderQuantityAction" class="com.lanson.oa.action.chart.engineer.OrderQuantityAction"></bean>
+  
+   <!-- service -->
+     <bean id="uploadService" class="com.lanson.oa.service.UploadService"></bean>
+     <bean id="loginService"  class="com.lanson.oa.service.LoginService"></bean>
+     <bean id="orderService" class="com.lanson.oa.service.OrderService"></bean>
+     <bean id="userService"  class="com.lanson.oa.service.UserService"></bean>
+     <bean id="permissionService" class="com.lanson.oa.service.PermissionService"></bean>
+     <bean id="qcOrderService" class="com.lanson.oa.service.QcOrderService"></bean>
+     <bean id="commentService" class="com.lanson.oa.service.CommentService"></bean>
+     <bean id="orderChartService" class="com.lanson.oa.service.chart.OrderChartService"></bean>
+     <bean id="orderManageService"  class="com.lanson.oa.service.OrderManageService"></bean>
+     <bean id="outputService" class="com.lanson.oa.service.OutputService"></bean>
+    <bean  id="outListService" class="com.lanson.oa.service.out.OutListService"></bean>
+    <bean id="engChartService" class="com.lanson.oa.service.chart.engineer.EngChartService"></bean>
+     <!-- session -->
+   <bean id="httpSessionManage" class="com.lanson.oa.util.HttpSessionManage"></bean>
+     
+</beans>
+
+
+

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lanson.oa.dao.QCRemarkDAO">
+		<insert id="saveOrUpdate"    parameterType="QCRemark">
+			  <selectKey keyProperty="count" resultType="int" order="BEFORE">
+			    select count(*) from qc_order  where orderId = #{orderId}
+			  </selectKey>
+			  <if test="count > 0">
+			    update  qc_order 
+		          set  check_address=#{qcAdress},qc_user=#{ qcUser},check_result=#{check_result},
+		          check_question=#{question},
+		            <if   test="checkDate!= null and  checkDate!= ''   ">
+		          check_date=#{checkDate},
+		          </if>
+		          check_pass=#{pass}
+			    where orderId = #{orderId}
+			  </if>
+			  <if test="count==0">
+			    insert into qc_order(orderId,check_address,qc_user,check_result,
+			    check_question,
+			    <if   test="checkDate!= null and  checkDate!= ''   ">
+			    check_date,
+			    </if>
+			    check_pass )    
+			    values(#{orderId},#{qcAdress},#{ qcUser},#{check_result},#{question},
+			    <if   test="checkDate!= null and  checkDate!= ''   ">
+			    #{checkDate},
+			    </if>
+			    #{pass})
+			  </if>
+      </insert>
+      
+      
+      <insert id="viewSaveOrUpdate"    parameterType="QCRemark">
+			  <selectKey keyProperty="count" resultType="int" order="BEFORE">
+			    select count(*) from qc_order  where orderId = #{orderId}
+			  </selectKey>
+			  <if test="count > 0">
+			    update  qc_order 
+		          set  
+		          qc_remark=#{qcRemark}
+			    where orderId = #{orderId}
+			  </if>
+			  <if test="count==0">
+			    insert into qc_order(orderId,qc_remark )    
+			    values(#{orderId},#{qcRemark})
+			  </if>
+      </insert>
+		
+		
+
+         
+</mapper>

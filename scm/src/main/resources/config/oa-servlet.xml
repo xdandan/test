@@ -1,0 +1,72 @@
+﻿<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<!--<context:component-scan base-package="com.test.controller" />
+	-->
+	<!-- 最后的配置如果没有<mvc:annotation-driven/>，
+	那么所有的Controller可能就没有解析，所有当有请求时候都没
+	有匹配的处理请求类，就都去<mvc:default-servlet-handler/>
+	即default servlet处理了。添加上<mvc:annotation-driven/>后，
+	相应的do请求被Controller处理，而静态资源因为没有相应的Controller就
+	会被default servlet处理。总之没有相应的Controller就会被
+	default servlet处理就ok了 --><!--
+	<mvc:annotation-driven />
+	<mvc:default-servlet-handler/>  
+	-->
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="lansonSCMInterceptor"/>
+				</list>
+		</property>
+	</bean>
+	
+
+    	<bean id="lansonSCMInterceptor" class="com.lanson.scm.interceptor.ScmInterceptor">
+    	<property name="adminPermission"    value="set"></property>
+		<property name="loginUrl" value="/login.do"/>
+		<property name="noPermissionUrl" value="/403.jsp"/>
+		<property name="allowUrls">
+			<list>
+				<value>/login.do</value>
+				<value>/logout.do</value>
+				<value>/order.do</value>
+				<value>order/orderlist.do</value>
+				<value>order/update.do</value>
+				<value>qc/remark.do</value>
+				<value>qc/orderlist.do</value>
+				<value>supply/view.do</value>
+				<value>/order/out/list.do</value>
+				<value>/orderout/list.do</value>
+				<value>/order/out/export.do</value>
+				<value>/orderout/pl/list.do</value>
+				<value>/order/out/pl/list.do</value>
+				<value>/order/out/pl/export.do</value>
+			</list>
+		</property>
+	</bean>
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/</value>
+		</property>
+		<property name="suffix">
+			<value></value>
+		</property>
+	</bean>
+  <context:annotation-config  />
+  
+<!--包含action-->
+	<import resource="oa-servlet-action.xml"/>
+</beans>
+
+
+

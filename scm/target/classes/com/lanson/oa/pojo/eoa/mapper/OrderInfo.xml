@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lanson.eoa.dao.OrderInfoDAO">
+<cache type="PERPETUAL" eviction="LRU" flushInterval="60000"   size="512" readOnly="true" />  
+
+<select id="selectOrderBySupplyId"   useCache="false"  resultMap="resultWorks">
+
+     SELECT *,convert(char(19),cur_out_date,121) as curdate FROM
+(SELECT v.*,o1.*,sup_order_no,sup_date,banliao,jinshu,quan,bi,dingjiao,waifa,paoguang,bz_number,out_number,owe_number,sup_remark,supply_comment ,our_comment,cur_out_date,reply_date1,reply_date2,ROW_NUMBER() OVER(ORDER BY v.id ) RN,COUNT(*) OVER() AS TOTAL
+  FROM View_buss_order   v left join lansonoa.dbo.sup_order_work s on v.id=s.orderId  
+ left join  lansonoa.dbo.order_status o1 on v.id=o1.orderId     where 1=1     
+ <if test="supplyId!= null and  supplyId!=-1   ">
+     and   v.gys=#{supplyId}  
+     </if>
+    <if test="orderNo!= null and  orderNo!=''   ">
+       and v.ddh like  #{orderNo} 
+     </if>
+         <if test="startDate!= null and  startDate!= ''   ">
+ and  v.xdrq>=#{startDate}
+   </if>
+      <if test="endDate!= null and  endDate!= ''   ">
+       <![CDATA[ and  v.xdrq<=#{endDate}]]>  
+   </if>
+     <if test="ourOrder!= null and  ourOrder!= ''   ">
+     and  s.sup_order_no   like   #{ourOrder}
+   </if>
+   <if test="style!= null and  style!= ''   ">
+     and  v.hth   like   #{style}
+   </if>
+  ) T
+  WHERE RN BETWEEN #{start} AND #{end}
+     
+     
+     
+</select>
+
+ <!--(select w2.n, w1.* from View_buss_order w1,
+(select top( #{2}) row_number() OVER (ORDER BY  ID DESC) n, ID from View_buss_order) w2 
+where w1.ID = w2.ID AND w2.n > #{3} )  -->
+
+<select id="selectOrders"     useCache="false"  resultMap="resultListQC">
+    select * from  ( select * from  
+    (select *,row_number() over(order by id ) rn,count(*) over() as TOTAL
+  from View_buss_order   v1  where 1=1
+  <if test="orderNo!= null and  orderNo!= ''   ">
+           and   v1.ddh like  #{orderNo}
+ </if>
+  <if test="supplyId!= null and  supplyId!=-1 ">
+       and    v1.gys=#{supplyId} 
+ </if>
+   ) T   
+  WHERE RN BETWEEN #{start}   AND #{end}) v 
+  left join 
+  (select s1.*,q1.qc_remark,q1.check_address,q1.qc_user,q1.check_result,q1.check_question,q1.check_pass,q1.check_date from lansonoa.dbo.sup_order_work s1 inner join lansonoa.dbo.qc_order q1 on  s1.orderId=q1.orderid)s 
+  on v.id=s.orderId  
+</select>
+
+<select id="selectCommentBySupplyId" useCache="false"  resultMap="resultWorks">
+    select * from  ( SELECT * FROM
+(SELECT *,ROW_NUMBER() OVER(ORDER BY id ) RN,COUNT(*) OVER() AS TOTAL
+  FROM View_buss_order   v1 where v1.gys=#{0}  and v1.ddh like  #{1}
+  ) T
+  WHERE RN BETWEEN #{2} AND #{3}) v left join lansonoa.dbo.sup_order_work s on v.id=s.orderId  
+</select>
+
+<resultMap type="OrderInfo"  id="resultListQC">
+    <id  column="id"     property="id"/>
+	    <result  column="ddh"   property="orderNo"/>
+	     <result  column="khdm"   property="itemNo"/>
+	      <result  column="gys"   property="supplyId"/>
+        <result  column="hth"   property="style"/>
+        <result  column="ys"   property="orderColor"/>
+         <result  column="sl"   property="orderNumber"/>
+          <result  column="xdrq"   property="orderDate"/>
+           <result  column="jhrq"   property="deliveryDate"/>
+             <result   column="TOTAL"  property="count"/>
+              <result  column="check_address"  property="qcAdress"/>
+               <result  column="qc_user"  property="qcUser"/>
+                <result  column="check_result"  property="check_result"/>
+                 <result  column="check_question"  property="question"/>
+                  <result  column="check_pass"  property="pass"/>
+                  <result  column="check_date"  property="checkDate"/>
+             <result  column="qc_remark"  property="qcRemark"/>
+       <association property="supOrderWork"  javaType="SupOrderWork">  
+                 <result  column="sup_order_no"   property="supOrderNo"/>
+			      <result  column="sup_date"   property="supDate"/>
+		        <result  column="banliao"   property="bl"/>
+		        <result  column="jinshu"   property="js"/>
+		         <result  column="quan"   property="quan"/>
+		          <result  column="bi"   property="bi"/>
+		           <result  column="dingjiao"   property="dj"/>
+		            <result  column="waifa"   property="wf"/>
+		             <result  column="paoguang"   property="pg"/>
+		             <result  column="bz_number"   property="packNumber"/>
+		              <result  column="out_number"   property="outNumber"/>
+		             <result  column="owe_number"   property="oweNumber"/>
+		             <result  column="sup_remark"   property="supRemark"/>
+		              <result  column="supply_comment"   property="supplyComment"/>
+                   <result  column="our_comment"   property="ourComment"/>
+        </association>  
+        <association property="orderStatus"   javaType="OrderStatus">
+          <result column="lock_date"  property="lockDate"/>
+          <result column="lock_order"  property="lockOrder"/>
+          <result  column="order_level"  property="orderLevel"/>
+        </association>
+    </resultMap>
+    
+    
+     <resultMap type="OrderInfo" id="resultWorks">  
+       <id  column="id"     property="id"/>
+	    <result  column="ddh"   property="orderNo"/>
+	     <result  column="khdm"   property="itemNo"/>
+	      <result  column="gys"   property="supplyId"/>
+        <result  column="hth"   property="style"/>
+        <result  column="ys"   property="orderColor"/>
+         <result  column="sl"   property="orderNumber"/>
+          <result  column="xdrq"   property="orderDate"/>
+           <result  column="jhrq"   property="deliveryDate"/>
+           <result   column="TOTAL"  property="count"/>
+           <!-- 供应商数据 -->
+        <association property="supOrderWork"  javaType="SupOrderWork">  
+                 <result  column="sup_order_no"   property="supOrderNo"/>
+		      <result  column="sup_date"   property="supDate"/>
+	        <result  column="banliao"   property="bl"/>
+	        <result  column="jinshu"   property="js"/>
+	         <result  column="quan"   property="quan"/>
+           <result  column="bi"   property="bi"/>
+            <result  column="dingjiao"   property="dj"/>
+             <result  column="waifa"   property="wf"/>
+             <result  column="paoguang"   property="pg"/>
+             <result  column="bz_number"   property="packNumber"/>
+              <result  column="out_number"   property="outNumber"/>
+             <result  column="owe_number"   property="oweNumber"/>
+             <result  column="sup_remark"   property="supRemark"/>
+              <result  column="supply_comment"   property="supplyComment"/>
+               <result  column="our_comment"   property="ourComment"/>
+               <result column="reply_date1"  property="replyDate1"/>
+               <result  column="reply_date2"  property="replyDate2"/>
+               <result  column="curdate"   property="curOutDate"/>
+        </association>  
+        <!-- 订单管理数据 -->
+          <association property="orderStatus"   javaType="OrderStatus">
+          <result column="lock_date"  property="lockDate"/>
+          <result column="lock_order"  property="lockOrder"/>
+          <result  column="order_level"  property="orderLevel"/>
+        </association>
+    </resultMap>  
+
+</mapper>

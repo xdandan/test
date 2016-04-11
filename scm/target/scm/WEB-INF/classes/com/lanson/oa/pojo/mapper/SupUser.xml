@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lanson.oa.dao.SupUserDAO">
+
+		<select id="selectSupUser"      resultType="SupUser" >
+	    	select  *  from sup_user  where username=#{0}   and  password=#{1}
+		</select>
+     <insert id="addUser"   parameterType="SupUser"   useGeneratedKeys="true" keyProperty="id">
+     insert into sup_user(username,password,supplyid)    values(#{username},#{password},#{supplyId})
+     </insert>
+     <insert id="insertPermission">
+     insert into permission_user(userid,perid)  values(#{0},#{1})
+     </insert>
+     
+   <insert id="updatePermission">
+     update permission_user  set perid=#{1}  where userid=#{0}
+     </insert>
+     
+     <select id="selectUserBySupplyId"    parameterType="int"  resultType="SupUser">
+     select * from   sup_user   where supplyid=#{supplyId}
+     </select>
+     
+         <select id="selectUserByUsername"    parameterType="String"  resultType="SupUser">
+     select * from   sup_user   where username=#{username}
+     </select>
+     <update id="updatePassowrdById"  >
+    update sup_user  set  password=#{0}   where  id=#{1}     
+     </update>
+     
+     <update id="updateById"  parameterType="SupUser">
+         update sup_user  set  username=#{username},password=#{password}   where  id=#{id}     
+     </update>
+     
+     
+     <select id="selectUsers"   resultMap="UserList">
+     select * from sup_user  s left join  etest.dbo.View_Supply  v on  s.supplyid=v.selectvalue  where s.id !=1
+     </select>
+     
+     <select id="selectUserById"   parameterType="int"   resultType="SupUser" >
+     select * from sup_user where id=#{id}
+     </select>
+     
+     
+     <select id="selectUserPermissionList"  resultMap="UserPermissionList">
+select * from(select * from sup_user  s1 left join (select u.userid,u.perid,g.per_name from permission_user  u left join permission_group g on u.perid=g.id)p on s1.id=p.userid) s left join  etest.dbo.View_Supply  v on  s.supplyid=v.selectvalue  where s.id !=1     
+</select>
+     
+     <resultMap type="SupUser" id="UserList">
+         <result  column=" id"  property="id"/>
+          <result  column=" username"  property="username"/>
+           <result  column=" password"  property="password"/>
+            <result  column="supplyid"  property="supplyId"/>
+            <result   column="selectname"       property="supplyName"/>
+     </resultMap>
+     
+       <resultMap type="SupUser" id="UserPermissionList">
+         <result  column=" id"  property="id"/>
+          <result  column=" username"  property="username"/>
+           <result  column=" password"  property="password"/>
+            <result  column="supplyid"  property="supplyId"/>
+            <result   column="selectname"       property="supplyName"/>
+            <result   column="perid"       property="perId"/>
+            <result   column="per_name"       property="perName"/>
+     </resultMap>
+     
+     
+     
+     
+</mapper>

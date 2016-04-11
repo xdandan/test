@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Built-By: fi25
+Created-By: IntelliJ IDEA
+Build-Jdk: 1.6.0_10-rc2
+

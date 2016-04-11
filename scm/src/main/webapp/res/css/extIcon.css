@@ -1,0 +1,23 @@
+
+.icon-accept {
+	background-image: url(../image/accept.png) !important;
+}
+.icon-lock-open {
+	background-image: url(../image/lock_open.png) !important;
+}
+.icon-lock {
+	background-image: url(../image/lock.png) !important;
+}
+.icon-record_blue{
+	background-image: url(../image/record_blue.png) !important;
+}
+.icon-record_green {
+	background-image: url(../image/record_green.png) !important;
+}
+.icon-record_red{
+	background-image: url(../image/record_red.png) !important;
+}
+.icon-record_excel{
+	background-image: url(../image/page_excel.png) !important;
+}
+

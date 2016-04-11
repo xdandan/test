@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lanson.eoa.dao.OrderChartDAO">
+     <!--<select id="selectChartOrder"   resultMap="chartOrderList">
+      select sum(sl) as total ,MONTH(xdrq) AS month  from  View_buss_order where year(xdrq)=#{year}  
+     <if test="supplyId!= null and  supplyId!=-1 ">
+       and    gys=#{supplyId} 
+     </if>
+      group by    MONTH(xdrq)
+      </select>  --> 
+      
+      <select id="selectChartOrder"   resultMap="deliveryList">
+         select DATEPART(YEAR,xdrq) as year,
+        DATEPART(month,xdrq) as month,
+       sum(case when DATEPART(day,xdrq) between 1  and 7  then sl else 0 end) 'one',
+       sum(case when DATEPART(day,xdrq) between 8  and 14 then sl else 0 end) 'two',
+       sum(case when DATEPART(day,xdrq) between 15 and 21 then sl else 0 end) 'three',
+       sum(case when DATEPART(day,xdrq) between 22 and 30 then sl else 0 end) 'four'                           
+       from View_buss_order  where year(xdrq)=#{year}
+           <if test="supplyId!= null and  supplyId!=-1 ">
+       and    gys=#{supplyId} 
+     </if>
+       group by  DATEPART(YEAR,xdrq),DATEPART(month,xdrq)
+      </select>
+      
+      <select id="selectDeliveryByWeek"  resultMap="deliveryList">
+       select DATEPART(YEAR,jhrq) as year,
+        DATEPART(month,jhrq) as month,
+       sum(case when DATEPART(day,jhrq) between 1  and 7  then sl else 0 end) 'one',
+       sum(case when DATEPART(day,jhrq) between 8  and 14 then sl else 0 end) 'two',
+       sum(case when DATEPART(day,jhrq) between 15 and 21 then sl else 0 end) 'three',
+       sum(case when DATEPART(day,jhrq) between 22 and 30 then sl else 0 end) 'four'                           
+       from View_buss_order  where year(jhrq)=#{year}
+           <if test="supplyId!= null and  supplyId!=-1 ">
+       and    gys=#{supplyId} 
+     </if>
+       group by  DATEPART(YEAR,jhrq),DATEPART(month,jhrq)
+      </select>
+      <select id="selectOutput"  resultMap="chartOrderList">
+    select sum(sl) as number,sum(sl*price) as total ,MONTH(${date}) as month   from  View_buss_order where year(${date})=#{year}  and gys=#{supplyId}
+       group by    MONTH(${date})
+      </select>
+        <select id="selectOutputPl"  resultMap="chartOrderList">
+    select sum(sl) as number, sum(sl*price) as total ,MONTH(${date}) as month   from  View_buss_order_pl where year(${date})=#{year}  and gys=#{supplyId}
+       group by    MONTH(${date})
+      </select>
+      
+      
+      <select id="selectSupplyIds" resultType="int">
+       select gys from   
+       <if test="belong==null  or belong==''  or   belong=='gx'  ">
+       View_buss_order 
+       </if>   
+        <if test="belong=='lh' ">
+       View_buss_order_pl 
+       </if>   
+       group by gys
+      </select>
+
+    <select id="selectYear" resultMap="chartOrderList">
+        select distinct year(outdate) as year from ${tableName}
+    </select>
+
+    <select id="selectOutCont" resultMap="chartOrderList">
+        select sum(outnumber) as number,sum(outnumber*price) as total ,MONTH(outdate) as month   from  ${tableName} where year(outdate)=#{year}  and gys=#{supplyId}
+        group by    MONTH(outdate)
+    </select>
+
+    <select id="selectEngOrder"  resultMap="chartEngList">
+       select DATEPART(YEAR,${tableFlag}date) as year, DATEPART(month,${tableFlag}date) as month,
+sum(${tableFlag}number)as number  from View_new_model where year(${tableFlag}date)=#{year} group by DATEPART(YEAR,${tableFlag}date),DATEPART(month,${tableFlag}date)
+    </select>
+
+    <select id="selectEngYear" resultMap="chartEngList">
+        select distinct year(${tableFlag}date) as year from View_new_model where ${tableFlag}date &lt;&gt; ''
+    </select>
+
+    <select id="selectWorkByName" resultMap="chartWorkList">
+        select  (select lastname from hrmresource where id=euserid) as name ,count(id) as total from View_new_model_all
+          WHERE  1 = 1
+        <if test="startDate!= null and  startDate!= ''   ">
+            <![CDATA[ and  cdate>=#{startDate}]]>
+        </if>
+        <if test="endDate!= null and  endDate!= ''   ">
+            <![CDATA[ and  cdate<=#{endDate}]]>
+        </if>
+          group by euserid  order by total  desc
+    </select>
+
+
+    <resultMap type="ChartOrder" id="chartWorkList">
+        <result column="name"  property="name"/>
+        <result column="total" property="total" />
+    </resultMap>
+
+
+    <resultMap type="ChartOrder" id="chartEngList">
+        <result column="month"  property="month"/>
+        <result column="year" property="year" />
+        <result column="number" property="number"/>
+    </resultMap>
+
+
+ <resultMap type="ChartOrder" id="chartOrderList">
+        <result column="total"  property="total"/>
+        <result column="month"  property="month"/>
+        <result column="year" property="year" />
+        <result column="number" property="number"/>
+        <result  column="gys" property="supplyId"/>
+ </resultMap>
+
+ <resultMap type="ChartOrder" id="deliveryList">
+    <result  column="one"  property="one"/>
+    <result  column="two"  property="two"/>
+    <result  column="three"  property="three"/>
+    <result  column="four"  property="four"/>
+    <result  column="month"  property="month"/>
+</resultMap>
+ 
+
+</mapper>

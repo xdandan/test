@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lanson.oa.dao.AuthDAO">
+
+	<insert id="insertAuth"   parameterType="Auth"     >
+	insert into auth(authid,userid,login_time)  values(#{authId},#{userId},#{loginTime})
+	</insert>
+	<update id="updateByUserId"   parameterType="Auth">
+	update  auth set  authid=#{authId},login_time=#{loginTime}  where  userid=#{userId}
+	</update>
+     <select id="selectAuthById" parameterType="String" resultType="Auth">
+           select * from auth where  authid=#{authId}
+     </select>
+        <select id="selectAuthByUserId"  parameterType="int" resultType="Auth">
+           select * from auth where      userid=#{userId}
+     </select>
+     
+     
+     
+</mapper>

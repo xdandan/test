@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lanson.eoa.dao.OrderOutDAO">
+
+	<select id="selectOutsByCon"  resultMap="resultOrderOuts">
+select * from
+    (select *,ROW_NUMBER() OVER(order BY id ) RN
+    from  (select b.*,v.khdm,v.price,v.gys,v.pm,v.proname,v.supply,v.bz,v.hth,v.ddh from
+		${orderOut} b
+      left join
+	${viewInfo} v
+       on b.orderid=v.id )  v1  where  v1.con_number=#{ConNumber}) T
+    where RN between #{start} and #{end}
+	</select>
+	<select id="selectCounOuts"  resultType="int" >
+		select count(*) from ${orderOut} b left join ${viewInfo} v  on b.orderid=v.id where con_number=#{ConNumber}
+	</select>
+
+	<select id="findListByConNumber"  resultMap="resultOrderOuts">
+				select b.*,v.khdm,v.price,v.gys,v.pm,v.proname,v.supply,v.bz,v.hth,v.ddh from ${orderOut} b left join ${viewInfo}  v  on b.orderid=v.id where con_number=#{ConNumber}  and gys=#{supplyId}
+	</select>
+
+	<select id="selectSupplyIds"    resultType="integer">
+		select gys from ${orderOut}  b left join ${viewInfo} v  on b.orderid=v.id where con_number=#{ConNumber} group by  gys
+	</select>
+
+
+
+
+
+  
+<resultMap id="resultOrderOuts" type="OrderOut">
+	<id  property="id" column="id"></id>
+	<result property="orderId" column="orderid"></result>
+	<result property="con_number" column="con_number"></result>
+	<result property="order_price" column="order_price"></result>
+	<result property="outDate" column="outdate"></result>
+	<result property="outNumber" column="outnumber"></result>
+	<result property="userId"  column="userid"></result>
+	<association property="orderInfo" javaType="OrderInfo">
+		<result property="orderNo" column="ddh"></result>
+		<result property="style" column="hth"></result>
+		<result  property="itemNo"  column="khdm"></result>
+		<result property="price" column="price"></result>
+		<result property="supplyId" column="gys"></result>
+		<result property="partId" column="pm"></result>
+		<result property="partName" column="proname"></result>
+		<result property="qcAdress" column="bz"></result>
+	</association>
+	<association property="orderInfo.supplyItem" javaType="SupplyItem">
+		<result property="supplyValue" column="gys"  ></result>
+		<result property="supplyName" column="supply" ></result>
+	</association>
+
+
+</resultMap>
+
+
+</mapper>

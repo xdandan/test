@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>考勤模板上传</title>
+ <link  rel="stylesheet"  href="res/js/resources/css/ext-all-neptune.css"/>
+    <script type="text/javascript" src="res/js/ext-all-debug.js"></script>
+<script type="text/javascript" src="res/js/locale/ext-lang-zh_CN.js"></script>
+
+<link href="res/js/examples/shared/example.css" rel="stylesheet" />
+
+
+<style type="text/css">
+        .upload-icon {
+            background: url('res/image/image_add.png') no-repeat 0 0 !important;
+        }
+        #fi-button-msg {
+            border: 2px solid #ccc;
+            padding: 5px 10px;
+            background: #eee;
+            margin: 5px;
+            float: left;
+        }
+        .x-debug .x-form-file-wrap .x-form-file-input {
+            filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0.6);
+            opacity: 0.6;
+            background-color: gray;
+        }
+    </style>
+    
+    <script type="text/javascript">
+    Ext.require([
+    'Ext.form.field.File',
+    'Ext.form.field.Number',
+    'Ext.form.Panel',
+    'Ext.window.MessageBox'
+]);
+Ext.onReady(function() {
+
+//  Class which shows invisible file input field.
+    if (window.location.href.indexOf('debug') !== -1) {
+        Ext.getBody().addCls('x-debug');
+    }
+    
+ var msg = function(title, msg) {
+        Ext.Msg.show({
+            title: title,
+            msg: msg,
+            minWidth: 200,
+            modal: true,
+            icon: Ext.Msg.INFO,
+            buttons: Ext.Msg.OK
+        });
+    };
+    
+     var tpl = new Ext.XTemplate(
+        '文件解析成功<br/>',
+        '文件名: {fileName}<br/>'
+    );
+    
+     Ext.create('Ext.form.Panel', {
+        renderTo: 'fi-form',
+        width: 500,
+        frame: true,
+        title: '请上传考勤模板文件',
+        bodyPadding: '10 10 0',
+
+        defaults: {
+            anchor: '100%',
+            allowBlank: false,
+            msgTarget: 'side',
+            labelWidth: 50
+        },
+
+        items: [{
+            xtype: 'filefield',
+            id: 'form-file',
+            emptyText: '选择上传文件.......',
+            fieldLabel: '文件名:',
+            name: 'photo-path',
+            buttonText: '',
+            buttonConfig: {
+                iconCls: 'upload-icon'
+            }
+        }],
+
+        buttons: [{
+            text: '上传',
+            handler: function(){
+                var form = this.up('form').getForm();
+                if(form.isValid()){
+                    form.submit({
+                        url: 'upload.do',
+                        waitMsg: '正在解析文件,请稍等...',
+                        success: function(fp, o) {
+                            msg('Success', tpl.apply(o.result));
+                        }
+                    });
+                }
+            }
+        },{
+            text: '重置',
+            handler: function() {
+                this.up('form').getForm().reset();
+            }
+        }]
+     });
+    
+    });
+    
+    </script>
+    
+    
+</head>
+ 
+<body>
+    <h1>考勤数据上传</h1>
+    <h2>注意事项</h2>
+    <p>
+        请确保数据的正确性,并确认上传文件中的员工的工号与OA系统的工号保持一致。
+    </p>
+    <div id="fi-form"></div>
+
+    
+</body>
+</html>

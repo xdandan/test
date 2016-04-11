@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lanson.eoa.dao.SupplyItemDAO">
+<cache type="PERPETUAL" eviction="LRU" flushInterval="60000"  
+        size="512" readOnly="true" />  
+<select id="selectSupply"    useCache="true"  resultMap="resultItemList">
+     select selectname,selectvalue from  View_Supply
+</select>
+ 
+ <select id="selectSupplyNameById"    useCache="true"    parameterType="int"   resultType="String">
+     select selectname  from  View_Supply where   selectvalue=#{supplyId}
+</select>
+
+
+<select id="selectPlSupplyNameById"    useCache="true"    parameterType="int"   resultType="String">
+     select selectname  from  View_Supply_PL where   selectvalue=#{supplyId}
+</select>
+ 
+ 
+ <resultMap type="SupplyItem"   id="resultItemList">
+   <result column="selectname"  property="supplyName"/>
+   <result column="selectvalue"  property="supplyValue"/> 
+ </resultMap>
+ 
+ 
+</mapper>

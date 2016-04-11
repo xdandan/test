@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lanson.eoa.dao.UserDAO">
+<cache type="PERPETUAL" eviction="LRU" flushInterval="60000"  
+        size="512" readOnly="true" />  
+<select id="selectIdByWorkCode"  parameterType="String"  useCache="false"  resultType="int">
+     select  id  from user_dept where workcode=#{workCode}
+</select>
+
+    <select id="selectUserDept" parameterType="int" resultMap="resultUserDept">
+            select * from user_dept  where id=#{userId}
+    </select>
+
+    <resultMap id="resultUserDept" type="User">
+        <id property="id" column="id"></id>
+        <result  property="lastName" column="lastname"></result>
+        <association property="dept" javaType="Dept">
+            <result property="deptId" column="departid"></result>
+            <result property="deptName"  column="departmentname"></result>
+        </association>
+    </resultMap>
+ 
+</mapper>

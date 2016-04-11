@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lanson.oa.dao.SupOderWorkDAO">
+
+		<select id="selectSupOrderById"     parameterType="int"    resultMap="resultOrderWork"  >
+	    	select  * from  sup_order_work  where  orderId=#{orderId}
+		</select>
+		<select id="selectReplyDateById"   parameterType="int"   resultType="String">
+           select  reply_date2  from sup_order_work  where orderId=#{orderId}
+		</select>
+		<insert id="insertCurDate">
+			  <selectKey keyProperty="count" resultType="int" order="BEFORE">
+			    select count(*) from sup_order_work  where orderId = #{orderId}
+			  </selectKey>
+				  <if test="count > 0">
+			       update sup_order_work set   cur_out_date=#{curDate}   where  orderId=#{orderId}
+			     </if>
+		     <if test="count==0">
+		     		 insert  into  sup_order_work(orderId,cur_out_date)  values(#{orderId},#{curDate})  
+		     </if>
+		</insert>
+		<select id="selectCurDateById"  parameterType="int" resultType="String">
+		   select   cur_out_date from  sup_order_work where orderId=#{orderId}
+		</select>
+		
+		
+		<insert id="workSaveOrUpdate"    parameterType="orderWork">
+			  <selectKey keyProperty="count" resultType="int" order="BEFORE">
+			    select count(*) from sup_order_work  where orderId = #{orderId}
+			  </selectKey>
+			  <if test="count > 0">
+			    update  sup_order_work 
+			    set sup_order_no = #{supOrderNo},
+			     <if   test="supDate!= null and  supDate!= ''   ">
+			    sup_date = #{supDate},
+			    </if>
+			    banliao=#{bl},
+			    jinshu=#{js},
+			    quan=#{quan},
+			    bi=#{bi},
+			    dingjiao=#{dj},
+			    waifa=#{wf},
+			     paoguang=#{pg},
+			    bz_number=#{packNumber},
+			    out_number=#{outNumber},
+			    owe_number=#{oweNumber},
+			    <if  test="replyDate1!=null  and  replyDate1!=''  ">
+			    reply_date1=#{replyDate1},
+			    </if>
+			    <if test="replyDate2!=null  and  replyDate2!='' ">
+			        reply_date2=#{replyDate2},
+			    </if>
+			    sup_remark=#{supRemark}
+			  
+			    where orderId = #{orderId}
+			  </if>
+			  <if test="count==0">
+			    insert into sup_order_work(orderId,sup_order_no,
+			   <if   test="supDate!= null and  supDate!= ''   ">
+			    sup_date,
+			    </if>
+			         <if  test="replyDate1!=null  and  replyDate1!=''  ">
+			     reply_date1,
+			     </if>
+			    <if test="replyDate2!=null  and  replyDate2!='' ">
+			     reply_date2,
+			     </if>
+			    banliao,jinshu,quan,bi,dingjiao,waifa,paoguang,bz_number
+			    ,out_number,owe_number,sup_remark)    values(#{orderId},#{supOrderNo},
+			     <if   test="supDate!= null and  supDate!= ''   ">
+			     #{supDate},
+			    </if>
+			     <if  test="replyDate1!=null  and  replyDate1!=''  ">
+			     #{replyDate1},
+			     </if>
+			    <if test="replyDate2!=null  and  replyDate2!='' ">
+			    #{replyDate2},
+			     </if>
+			    #{bl},#{js},#{quan},
+			   #{bi}, #{dj},#{wf},#{pg},#{packNumber},#{outNumber},#{oweNumber},#{supRemark})
+			  </if>
+      </insert>
+      
+      
+      <insert id="commentSaveOrUpdate"   parameterType="orderWork">
+       <selectKey keyProperty="count" resultType="int" order="BEFORE">
+			    select count(*) from sup_order_work  where orderId = #{orderId}
+			  </selectKey>
+			  <if test="count > 0">
+			    update  sup_order_work 
+			    set  
+			      <if   test="supplyComment!= null  ">
+			    supply_comment = #{supplyComment}
+			    </if>
+			      <if   test="ourComment!= null    ">
+			    our_comment= #{ourComment}
+			    </if>
+			    where orderId = #{orderId}
+			  </if>
+			  <if test="count==0">
+			  <if   test="supplyComment!= null and  supplyComment!= ''   ">
+			     insert into sup_order_work(supply_comment)    values(#{supplyComment})
+			    </if>
+			       <if   test="ourComment!= null and  ourComment!= ''   ">
+			     insert into sup_order_work(our_comment)    values(#{ourComment})
+			     </if>
+			  </if>
+      </insert>
+		
+		
+
+         <resultMap type="orderWork"  id="resultOrderWork">
+		    <id  column="id"     property="id"/>
+			    <result  column="orderId"   property="orderId"/>
+			    <result  column="sup_order_no"   property="supOrderNo"/>
+			   <result  column="sup_date"   property="supDate"/>
+		       <result  column="banliao"   property="bl"/>
+		       <result  column="jinshu"   property="js"/>
+		      <result  column="quan"   property="quan"/>
+		     <result  column="bi"   property="bi"/>
+		     <result  column="dingjiao"   property="dj"/>
+		     <result  column="waifa"   property="wf"/>
+		      <result  column="paoguang"   property="pg"/>
+		     <result  column="bz_number"   property="packNumber"/>
+		     <result  column="out_number"   property="outNumber"/>
+		      <result  column="owe_number"   property="oweNumber"/>
+		     <result  column="sup_remark"   property="supRemark"/>
+    </resultMap>
+</mapper>

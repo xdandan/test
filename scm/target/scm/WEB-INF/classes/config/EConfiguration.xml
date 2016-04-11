@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<typeAliases>
+    <typeAlias alias="OrderInfo"        type="com.lanson.oa.pojo.OrderInfo"  />
+    <typeAlias alias="SupplyItem"     type="com.lanson.oa.pojo.SupplyItem" />
+    <typeAlias alias="PerGroup"       type="com.lanson.oa.pojo.PerGroup"/>
+    <typeAlias alias="SupOrderWork"   type="com.lanson.oa.pojo.SupOrderWork"/>
+    <typeAlias alias="OrderStatus"   type="com.lanson.oa.pojo.OrderStatus"/>
+    <typeAlias alias="ChartOrder"     type="com.lanson.oa.pojo.ChartOrder"/>
+    <typeAlias alias="OrderOut" type="com.lanson.oa.pojo.out.OrderOut"/>
+    <typeAlias alias="User"  type="com.lanson.oa.pojo.User" />
+    <typeAlias alias="Dept"  type="com.lanson.oa.pojo.Dept"/>
+</typeAliases>
+</configuration>

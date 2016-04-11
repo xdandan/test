@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lanson.oa.dao.PerGroupDAO">
+
+
+     
+        <select id="selectPermission"    resultType="int">
+           select   count(*)    from permission_user where userid=#{0}  and perid=#{1}
+     </select>
+     
+     
+     
+     <select id="selectPerList"   resultMap="ListPerGroup">
+          select  * from permission_group 
+     </select>
+     
+     <resultMap type="PerGroup"   id="ListPerGroup">
+         <result  column="id"     property="id"/>
+          <result  column="per_name"     property="perName"/>
+     </resultMap>
+     
+     
+</mapper>
